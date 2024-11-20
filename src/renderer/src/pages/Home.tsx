@@ -7,7 +7,7 @@ import useNoteStore from '@renderer/store/useNoteStore'
 import debounce from 'lodash.debounce'
 import TitleInput from '@renderer/components/TitleInput'
 import Tiptap from '@renderer/components/TipTap'
-import { Pin } from 'lucide-react'
+import { Pin, Trash2} from 'lucide-react'
 
 const Home: React.FC = () => {
   const tiptapRef = useRef<any>(null) // Replace 'any' with the actual type if available
@@ -29,7 +29,7 @@ const Home: React.FC = () => {
     const noteToUpdate = notes.find((note) => note.id === noteId)
     if (noteToUpdate) {
       // Update local state immediately
-      const updatedNote = { ...noteToUpdate, [field]: value }
+      const updatedNote = { ...noteToUpdate, [field]: value || '' }
       useNoteStore.setState((state) => ({
         notes: state.notes.map((n) => (n.id === noteId ? updatedNote : n))
       }))
@@ -50,6 +50,18 @@ const Home: React.FC = () => {
     // await updateNote({ ...note, isPinned: true })
   }
 
+  const handleDeleteNote = async (noteId: string) => {
+    // Send the note to Electron main process to delete it
+    window.electronAPI.deleteNote(noteId)
+
+    // Update the note in the database as deleted
+    // await updateNote({ ...note, isDeleted: true })
+    // delete the note state
+    useNoteStore.setState((state) => ({
+      notes: state.notes.filter((n) => n.id !== noteId)})
+    )
+  }
+
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Notes</h1>
@@ -67,12 +79,20 @@ const Home: React.FC = () => {
               key={note.id}
               className={`${themeClasses[note.theme]} relative shadow rounded-lg p-4 hover:shadow-lg transition-shadow group overflow-auto`}
             >
-              <div
-                className="absolute top-2 right-2 cursor-pointer opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity delay-100"
+                <div
+                className="absolute top-2 right-8 cursor-pointer opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity delay-100"
                 onClick={() => handlePinNote(note.id)}
-              >
-                <Pin className="h-5 w-5 cursor-pointer text-gray-500" />
-              </div>
+                >
+                    <Pin className="h-5 w-5 cursor-pointer text-gray-500 hover:fill-white" />
+                </div>
+                <div
+                    className="absolute top-2 right-2 cursor-pointer opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition-opacity delay-100"
+                    onClick={() => handleDeleteNote(note.id)}
+                >
+                    <Trash2 className="h-5 w-5 cursor-pointer text-gray-500 hover:fill-white" />
+                </div>
+
+
               <TitleInput
                 className="border-none"
                 title={note.title || 'Untitled Note'}
