@@ -8,7 +8,7 @@ import debounce from 'lodash.debounce'
 import TitleInput from '@renderer/components/TitleInput'
 import Tiptap from '@renderer/components/TipTap'
 import { Pin, Trash2} from 'lucide-react'
-import TaskTimer from '@renderer/components/taskTimer'
+// import TaskTimer from '@renderer/components/taskTimer'
 
 const Home: React.FC = () => {
   const tiptapRef = useRef<any>(null) // Replace 'any' with the actual type if available
