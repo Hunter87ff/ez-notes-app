@@ -8,6 +8,7 @@ import debounce from 'lodash.debounce'
 import TitleInput from '@renderer/components/TitleInput'
 import Tiptap from '@renderer/components/TipTap'
 import { Pin, Trash2} from 'lucide-react'
+import TaskTimer from '@renderer/components/taskTimer'
 
 const Home: React.FC = () => {
   const tiptapRef = useRef<any>(null) // Replace 'any' with the actual type if available
@@ -64,6 +65,8 @@ const Home: React.FC = () => {
 
   return (
     <div className="p-4">
+        {/* This one looks better ig!! */}
+        {/* <TaskTimer /> */}
       <h1 className="text-2xl font-bold mb-4">Notes</h1>
       {notes.length === 0 ? (
         <p>
