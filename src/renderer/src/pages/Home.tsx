@@ -98,7 +98,7 @@ const Home: React.FC = () => {
 
               <TitleInput
                 className="border-none"
-                title={note.title || 'Untitled Note'}
+                title={note.title}
                 handleTitleChange={(e) => handleNoteChange(note.id, 'title', e.target.value)}
               />
 
